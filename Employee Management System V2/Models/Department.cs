@@ -9,9 +9,8 @@ namespace Employee_Management_System_V2.Models
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public Department(int id, string name)
+        public Department(string name)
         {
-            Id = id;
             Name = name;
         }
     }

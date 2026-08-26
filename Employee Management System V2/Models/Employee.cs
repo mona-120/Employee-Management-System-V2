@@ -13,13 +13,11 @@ namespace Employee_Management_System_V2.Models
         public decimal Salary { get; set; }
         public List<string> Skills { get; set; } = new List<string>();
 
-        public Employee(int id, string name , int deptId, decimal salary , List<string> skills)
+        public Employee(string name , int deptId, decimal salary)
         {
-            Id = id;
             Name = name;
             DepartmentId = deptId;
             Salary = salary;
-            Skills = skills;
         }
     }
 }
