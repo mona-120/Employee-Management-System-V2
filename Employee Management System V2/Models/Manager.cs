@@ -8,10 +8,8 @@ namespace Employee_Management_System_V2.Models
     {
         List<string> TeamMembers = new List<string>();
 
-        public Manager(string name, int departmentId, decimal salary,List<string> members)
-            : base(name, departmentId, salary)
-        {
-            TeamMembers = members;
-        }
+        public Manager(string name, int departmentId, decimal salary)
+            : base(name, departmentId, salary) { }
+        
     }
 }

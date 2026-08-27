@@ -1,4 +1,5 @@
 ﻿using Employee_Management_System_V2.Common;
+using Employee_Management_System_V2.Events;
 using Employee_Management_System_V2.Models;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,9 @@ namespace Employee_Management_System_V2.Services
 {
     internal class Company
     {
+        public event EventHandler<EmployeeEventArgs> EmployeeActiviated;
+        public event EventHandler<EmployeeEventArgs> EmployeePromoted;
+
         List<Employee> ActiveEmployees = new List<Employee>();
         Dictionary<int, string> Departments = new Dictionary<int, string>();
         Queue<Employee> OnBoarding = new Queue<Employee>();
@@ -64,6 +68,7 @@ namespace Employee_Management_System_V2.Services
             }
             Employee emp = OnBoarding.Dequeue();
             ActiveEmployees.Add(emp);
+            EmployeeActiviated.Invoke(this,new EmployeeEventArgs(emp.Name));
             return new Result<Employee>(true,$"Employee {emp.Name} Added successfully",emp);
         }
 
@@ -97,7 +102,20 @@ namespace Employee_Management_System_V2.Services
         }
 
 
-
+        // Promote employee
+        public Result<Manager> PromoteEmployee(int EmpId)
+        {
+            Employee? emp = FindemployeeByID(EmpId);
+            if(emp == null)
+            {
+                return new Result<Manager>(false, $"Employee {emp.Name} isn't exist", null);
+            }
+            Manager manager = new Manager(emp.Name,emp.DepartmentId,emp.Salary);
+            manager.Id = EmpId;
+            manager.HireDate = DateTime.Now;
+            EmployeePromoted.Invoke(this, new EmployeeEventArgs(manager.Name));
+            return new Result<Manager>(true,$"Employee {manager.Name} Promoted to be manager of department {manager.DepartmentId}",manager)
+        }
 
     }
 }
