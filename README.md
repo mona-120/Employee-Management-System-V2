@@ -29,6 +29,9 @@ Version 2 extends the system by introducing more advanced C# concepts, including
 - Raise events when an employee is activated or promoted.
 - Return results using a generic `Result<T>` class instead of throwing exceptions for every expected invalid operation.
 - Validate numeric user input using `TryParse` to avoid system craching when invalid inputs.
+- Sort Employees using a Delegate Ascending by Salary.
+- Use another method to Search about employee and department by implement Generic Interface `IHasId`.
+-  Raise events when a skill added.
 
 ---
 
@@ -60,6 +63,8 @@ The skills are stored in the employee's own `Skills` list, while a `HashSet` is 
 
 Employee filtering was implemented using a custom Delegate.
 
+Create a Delegate to sort employees ascending by Salary using Bubble sort.
+
 Instead of creating a separate method for every filtering condition, the filtering method receives the condition as a Delegate.
 
 ---
@@ -72,10 +77,20 @@ The system raises events when:
 
 - An employee is activated from the Onboarding Queue.
 - An employee is promoted to a Manager.
+- Add a new skill in the system.
 
 The `Company` class acts as the Publisher and raises the events, while the subscribed Event Handler methods in `Program` respond to them.
 
 This allows the `Company` to notify other parts of the application without knowing exactly which method will handle the notification.
+
+Try Subscribe (+=) and Subscribe(-=) events in program.cs to demonstrate when method is running.  
+
+--- 
+
+### 6. Generic IHasId<T>
+
+A generic `Result<T>` interface used to search about employee and Department  using another way.
+
 
 
 
