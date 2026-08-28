@@ -1,5 +1,6 @@
 ﻿using Employee_Management_System_V2.Common;
 using Employee_Management_System_V2.Events;
+using Employee_Management_System_V2.Interfaces;
 using Employee_Management_System_V2.Models;
 using System;
 using System.Collections.Generic;
@@ -9,13 +10,14 @@ using System.Xml.Linq;
 
 namespace Employee_Management_System_V2.Services
 {
-    internal class Company
+    internal class Company 
     {
         public event EventHandler<EmployeeEventArgs> EmployeeActiviated;
         public event EventHandler<EmployeeEventArgs> EmployeePromoted;
+        public event EventHandler<SkillRegisterEventArgs> EmployeeSkillRegistered;
 
        public List<Employee> ActiveEmployees = new List<Employee>();
-       private Dictionary<int, string> Departments = new Dictionary<int, string>();
+       public Dictionary<int, string> Departments = new Dictionary<int, string>();
        private Queue<Employee> OnBoarding = new Queue<Employee>();
        private Stack<string> ActionsHistory = new Stack<string>();
        private HashSet<string> UniqueSkills = new HashSet<string>();
@@ -91,6 +93,7 @@ namespace Employee_Management_System_V2.Services
             {
                 UniqueSkills.Add(skill);
                 emp.Skills.Add(skill);
+                EmployeeSkillRegistered.Invoke(this, new SkillRegisterEventArgs(skill));
                 ActionsHistory.Push($"New skill {skill} added");
             }
             return new Result<Employee>(true, $"Added skills for employee {emp.Name} successfully", emp);
@@ -230,6 +233,11 @@ namespace Employee_Management_System_V2.Services
                 Console.WriteLine(skill);
             }
         }
+
+
+       
+
+
 
 
         // Data Seeding

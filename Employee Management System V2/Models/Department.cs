@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Employee_Management_System_V2.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Employee_Management_System_V2.Models
 {
-    internal class Department
+    internal class Department : IHasId<int>
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -12,6 +13,17 @@ namespace Employee_Management_System_V2.Models
         public Department(string name)
         {
             Name = name;
+        }
+        public Department() { }
+
+        // Implement IHasId
+        public bool IsExist(IEnumerable<int> Ids,int id)
+        {
+            foreach(var Id in Ids)
+            {
+                if(Id == id) return true;
+            }
+            return false;
         }
     }
 }

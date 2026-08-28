@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Employee_Management_System_V2.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Employee_Management_System_V2.Models
 {
-    internal class Employee
+    internal class Employee : IHasId<Employee>
     {
         public int Id { get; set; }
         public string Name { get; set; } 
@@ -18,6 +19,18 @@ namespace Employee_Management_System_V2.Models
             Name = name;
             DepartmentId = deptId;
             Salary = salary;
+        }
+
+        public Employee() { }
+
+        // implement IHasId
+        public bool IsExist(IEnumerable<Employee> employees,int id)
+        {
+            foreach(Employee employee in employees)
+            {
+                if(employee.Id == id) return true;
+            }
+            return false;
         }
     }
 }

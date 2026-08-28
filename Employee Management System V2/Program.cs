@@ -13,10 +13,16 @@ namespace Employee_Management_System_V2
             Company company = new Company();
             company.DataSeeding();
             EmployeeFilter employeeFilter = new EmployeeFilter();
+            EmployeeComparer employeeComparer = new EmployeeComparer();
+            
 
             // subscribe events
             company.EmployeeActiviated += AddingEmployeeHandler;
             company.EmployeePromoted += PromoteEmployeeHandler;
+            company.EmployeeSkillRegistered += AddingSkillHandler;
+            company.EmployeeActiviated += AddingEmployeeHandler;
+            company.EmployeeActiviated -= AddingEmployeeHandler;
+
 
             while (true)
             {
@@ -39,6 +45,9 @@ namespace Employee_Management_System_V2
                 Console.WriteLine("14. Get Employees with specific salary");
                 Console.WriteLine("15. Get Employees that take alary above a specific number");
                 Console.WriteLine("16. Exit");
+                Console.WriteLine("17. Search in employees using interface");
+                Console.WriteLine("18. Search in departments using interface");
+                Console.WriteLine("19. Sort employees Ascending by salary");
 
                 try
                 {
@@ -217,6 +226,38 @@ namespace Employee_Management_System_V2
                         case 16:
                             Environment.Exit(0);
                             break;
+                        case 17:
+                            Console.Write("Enter Employee id: ");
+                            if (!int.TryParse(Console.ReadLine(), out int id17))
+                            {
+                                Console.WriteLine("Id must be integer number, please try again");
+                                break;
+                            }
+                            Employee emp17 = new Employee();
+                            if (emp17.IsExist(company.ActiveEmployees, id17))
+                                Console.WriteLine($"Found Employee with id: {id17}");
+                            else
+                                Console.WriteLine($"Employee with Id {id17} doesn't exist"); 
+                            break;
+                        case 18:
+                            Console.Write("Enter Department id: ");
+                            if (!int.TryParse(Console.ReadLine(), out int id18))
+                            {
+                                Console.WriteLine("Id must be integer number, please try again");
+                                break;
+                            }
+                            Department department = new Department();
+                            if (department.IsExist(company.Departments.Keys, id18))
+                                Console.WriteLine($"Found Department with id {id18}");
+                            else Console.WriteLine($"Department with Id {id18} doesn't exist");
+                            break;
+                        case 19:
+                            List<Employee> SortedEmployees = employeeComparer.CompareEmployees(company.ActiveEmployees , (e1,e2) => e1.Salary > e2.Salary);
+                            foreach(var sortedEmployee in SortedEmployees)
+                            {
+                                Console.WriteLine($"Employee {sortedEmployee.Name} with salary {sortedEmployee.Salary}");
+                            }
+                            break;
                         default:
                             Console.WriteLine("Invalid Process number , please enter valid input(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)");
                             break;
@@ -239,6 +280,11 @@ namespace Employee_Management_System_V2
         public static void PromoteEmployeeHandler(object? ob,EmployeeEventArgs e)
         {
             Console.WriteLine($"Employee {e.EmployeeName} become manager");
+        }
+
+        public static void AddingSkillHandler(object? ob , SkillRegisterEventArgs s)
+        {
+            Console.WriteLine($"Skill {s.SkillName} Added Successfully");
         }
     }
 }
