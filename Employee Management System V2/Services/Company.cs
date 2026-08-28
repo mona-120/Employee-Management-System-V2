@@ -14,7 +14,7 @@ namespace Employee_Management_System_V2.Services
         public event EventHandler<EmployeeEventArgs> EmployeeActiviated;
         public event EventHandler<EmployeeEventArgs> EmployeePromoted;
 
-       private List<Employee> ActiveEmployees = new List<Employee>();
+       public List<Employee> ActiveEmployees = new List<Employee>();
        private Dictionary<int, string> Departments = new Dictionary<int, string>();
        private Queue<Employee> OnBoarding = new Queue<Employee>();
        private Stack<string> ActionsHistory = new Stack<string>();
@@ -65,17 +65,17 @@ namespace Employee_Management_System_V2.Services
 
 
         // Process Onboarding queue
-        public Result<Employee> ProcessNextEmployee()
+        public void ProcessNextEmployee()
         {
             if(OnBoarding.Count == 0)
             {
-                return new Result<Employee>(false, "Onboarding Queue is empty", null);
+                Console.WriteLine("Onboarding Queue is empty");
+                return;
             }
             Employee emp = OnBoarding.Dequeue();
             ActiveEmployees.Add(emp);
             ActionsHistory.Push($"Employee {emp.Name} added to Active Employees List");
             EmployeeActiviated.Invoke(this,new EmployeeEventArgs(emp.Name));
-            return new Result<Employee>(true,$"Employee {emp.Name} Added successfully",emp);
         }
 
 
@@ -105,7 +105,6 @@ namespace Employee_Management_System_V2.Services
                 if(emp.Id == id)
                     return emp;
             }
-            Console.WriteLine($"Employee {id} doesn't Exist");
             return null;
         }
 
@@ -120,25 +119,27 @@ namespace Employee_Management_System_V2.Services
                     return emp;
                 }
             }
-            Console.WriteLine($"Employee {name} doesn't Exist");
             return null;
         }
 
 
         // Promote employee
-        public Result<Manager> PromoteEmployee(int EmpId)
+        public void PromoteEmployee(int EmpId)
         {
             Employee? emp = FindemployeeByID(EmpId);
             if(emp == null)
             {
-                return new Result<Manager>(false, $"Employee {emp.Id} isn't exist", null);
+                Console.WriteLine($"Employee {EmpId} isn't exist");
+                return;
             }
             Manager manager = new Manager(emp.Name,emp.DepartmentId,emp.Salary);
             manager.Id = EmpId;
             manager.HireDate = DateTime.Now;
+            manager.Skills = emp.Skills;
+            int index = ActiveEmployees.IndexOf(emp);  // Get index of employee to replace it to be manager
+            ActiveEmployees[index] = manager;
             ActionsHistory.Push($"Employee {emp.Name} Promoted to be a manager");
             EmployeePromoted.Invoke(this, new EmployeeEventArgs(manager.Name));
-            return new Result<Manager>(true, $"Employee {manager.Name} Promoted to be manager of department {manager.DepartmentId}", manager);
         }
 
 
@@ -228,6 +229,32 @@ namespace Employee_Management_System_V2.Services
             {
                 Console.WriteLine(skill);
             }
+        }
+
+
+        // Data Seeding
+        public void DataSeeding()
+        {
+            // Add Department
+            Department dept1 = new Department("Backend");
+            Department dept2 = new Department("HR");
+            Department dept3 = new Department("Frontend");
+            AddDepartment(dept1);
+            AddDepartment(dept2);
+            AddDepartment(dept3);
+
+
+            // Add employee in Onboarding List
+            Employee emp1 = new Employee("Mohamed", 1, 15000);
+            Employee emp2 = new Employee("Ahmed", 2, 10000);
+            AddEmployee(emp1);
+            AddEmployee(emp2);
+
+
+            // Add Skills
+            UniqueSkills.Add("SQL");
+            UniqueSkills.Add("C#");
+
         }
 
     }
