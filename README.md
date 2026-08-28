@@ -36,8 +36,6 @@ Version 2 extends the system by introducing more advanced C# concepts, including
 
 ### 1. Manager Class
 
-A new `Manager` class inherits from `Employee`.
-
 When an employee is promoted, a `Manager` object is created and replaces the original employee in the Active Employees List while keeping the same employee ID and information.
 
 This allows the promoted employee to be treated as a `Manager` while remaining in the Active Employees List.
